@@ -5,6 +5,11 @@ namespace Classes;
 use DateTime;
 use Exception;
 
+/**
+ * Class Query
+ * @package Classes
+ * @author Ahmed Helal Ahmed
+ */
 class Query extends Model
 {
     const DATE_FROM = 0;

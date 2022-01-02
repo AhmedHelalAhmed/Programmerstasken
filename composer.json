@@ -6,7 +6,8 @@
     "psr-4": {
       "Classes\\": "Classes",
       "Enums\\": "Enums",
-      "Helpers\\": "Helpers"
+      "Helpers\\": "Helpers",
+      "Services\\": "Services"
 
     }
   },
