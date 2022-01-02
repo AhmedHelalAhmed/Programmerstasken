@@ -2,6 +2,9 @@
 
 namespace Classes;
 
+use DateTime;
+use Exception;
+
 /**
  * Class WaitingTimeline
  * @package Classes
@@ -9,16 +12,20 @@ namespace Classes;
  */
 class WaitingTimeline extends Model
 {
-    private $date = '';
-    private $time = 0;
     const DATE = 4;
     const TIME = 5;
+    private $date = '';
+    private $time = 0;
 
     /**
-     * @return string
+     * @return DateTime| string
+     * @throws Exception
      */
-    public function getDate(): string
+    public function getDate()
     {
+        if ($this->date) {
+            return new DateTime(str_replace('.', '-', $this->date));
+        }
         return $this->date;
     }
 

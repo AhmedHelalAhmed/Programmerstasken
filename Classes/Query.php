@@ -2,17 +2,25 @@
 
 namespace Classes;
 
+use DateTime;
+use Exception;
+
 class Query extends Model
 {
-    private $dateFrom = '';
-    private $dateTo = '';
     const DATE_FROM = 0;
     const DATE_TO = 1;
+    private $dateFrom = '';
+    private $dateTo = '';
+
     /**
-     * @return string
+     * @return string|DateTime
+     * @throws Exception
      */
-    public function getDateFrom(): string
+    public function getDateFrom()
     {
+        if ($this->dateFrom) {
+            return new DateTime(str_replace('-', '.', $this->dateFrom));
+        }
         return $this->dateFrom;
     }
 
@@ -27,10 +35,14 @@ class Query extends Model
     }
 
     /**
-     * @return string|null
+     * @return string|DateTime
+     * @throws Exception
      */
-    public function getDateTo(): ?string
+    public function getDateTo()
     {
+        if ($this->dateTo) {
+            return new DateTime(str_replace('.', '-', $this->dateTo));
+        }
         return $this->dateTo;
     }
 

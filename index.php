@@ -3,7 +3,6 @@
 use Classes\Model;
 use Classes\Query;
 use Classes\WaitingTimeline;
-use Enums\StructureOfInputEnum;
 use Enums\TypeOfInputLineEnum;
 use Helpers\ArrayHelper;
 
@@ -59,7 +58,60 @@ if ($handle) {
                 ->setDateTo(is_null($dateTo) ? null : $dateTo);
 
             // TODO your logic here
+            // filter data base on query
+            // sum time and divide by number of items
+            $dataFiltered = array_filter($data, function (WaitingTimeline $waitingTimeline) use ($query) {
 
+                if ($query->getService() != '*' && $waitingTimeline->getService() != $query->getService()) {
+                    return false;
+                }
+
+
+                if ($query->getQuestionType() != '*' && $waitingTimeline->getQuestionType() != $query->getQuestionType()) {
+                    return false;
+                }
+
+
+                if ($query->getService() != '*' && $query->getVariation() && $waitingTimeline->getVariation() != $query->getVariation()) {
+                    return false;
+                }
+
+                if ($query->getQuestionType() != '*' && $query->getCategory() && $waitingTimeline->getCategory() != $query->getCategory()) {
+                    return false;
+                }
+
+                if ($query->getQuestionType() != '*' && $query->getSubCategory() && $waitingTimeline->getSubCategory() != $query->getSubCategory()) {
+                    return false;
+                }
+
+
+                if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
+                    return false;
+                }
+
+                if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
+                    return false;
+                }
+
+
+                if ($query->getDateFrom() && $waitingTimeline->getDate() < $query->getDateFrom()) {
+                    return false;
+                }
+
+                if ($query->getDateTo() && $waitingTimeline->getDate() > $query->getDateTo()) {
+                    return false;
+                }
+                return true;
+            });
+
+
+            if ($count = count($dataFiltered)) {
+                echo array_sum(array_map(function (WaitingTimeline $waitingTimeline) {
+                        return $waitingTimeline->getTime();
+                    }, $dataFiltered)) / $count . PHP_EOL;
+            } else {
+                echo '-' . PHP_EOL;
+            }
 
         } elseif (TypeOfInputLineEnum::isWaitingTime($inputType)) {
 
