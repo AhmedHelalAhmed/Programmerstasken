@@ -1,5 +1,7 @@
 <?php
 
+use Classes\Model;
+use Classes\Query;
 use Classes\WaitingTimeline;
 use Enums\StructureOfInputEnum;
 use Enums\TypeOfInputLineEnum;
@@ -21,11 +23,44 @@ if ($handle) {
         $line = fgets($handle);
         $lineValues = explode(' ', $line);
 
-        $inputType = $lineValues[StructureOfInputEnum::INPUT_TYPE];
+        $inputType = $lineValues[Model::INPUT_TYPE];
 
         if (TypeOfInputLineEnum::isQuery($inputType)) {
+            [
+                ,
+                $serviceVariation,
+                $questionTypeAndCategoryAndSubcategory,
+                $responseType,
+                $dates
+            ] = $lineValues;
 
-//            var_dump('Query');
+            $datesVales = explode('-', $dates);
+            $dateFrom = ArrayHelper::getValueOfIndex(Query::DATE_FROM, $datesVales);
+            $dateTo = ArrayHelper::getValueOfIndex(Query::DATE_TO, $datesVales);
+            $serviceVariationValues = explode('.', $serviceVariation);
+            $questionTypeAndCategoryAndSubcategoryValues = explode('.', $questionTypeAndCategoryAndSubcategory);
+            $service = ArrayHelper::getValueOfIndex(Model::SERVICE, $serviceVariationValues);
+            $variation = ArrayHelper::getValueOfIndex(Model::VARIATION, $serviceVariationValues);
+            $questionType = ArrayHelper::getValueOfIndex(Model::QUESTION_TYPE,
+                $questionTypeAndCategoryAndSubcategoryValues);
+            $category = ArrayHelper::getValueOfIndex(Model::CATEGORY,
+                $questionTypeAndCategoryAndSubcategoryValues);
+            $subcategory = ArrayHelper::getValueOfIndex(Model::SUBCATEGORY,
+                $questionTypeAndCategoryAndSubcategoryValues);
+
+            $query = (new Query())
+                ->setService($service)
+                ->setVariation(is_null($variation) ? null : intval($variation))
+                ->setQuestionType($questionType)
+                ->setResponseType($responseType)
+                ->setCategory(is_null($category) ? null : intval($category))
+                ->setSubCategory(is_null($subcategory) ? null : intval($subcategory))
+                ->setDateFrom($dateFrom)
+                ->setDateTo(is_null($dateTo) ? null : $dateTo);
+
+            // TODO your logic here
+
+
         } elseif (TypeOfInputLineEnum::isWaitingTime($inputType)) {
 
             [
@@ -39,13 +74,13 @@ if ($handle) {
 
             $serviceVariationValues = explode('.', $serviceVariation);
             $questionTypeAndCategoryAndSubcategoryValues = explode('.', $questionTypeAndCategoryAndSubcategory);
-            $service = ArrayHelper::getValueOfIndex(StructureOfInputEnum::SERVICE, $serviceVariationValues);
-            $variation = ArrayHelper::getValueOfIndex(StructureOfInputEnum::VARIATION, $serviceVariationValues);
-            $questionType = ArrayHelper::getValueOfIndex(StructureOfInputEnum::QUESTION_TYPE,
+            $service = ArrayHelper::getValueOfIndex(Model::SERVICE, $serviceVariationValues);
+            $variation = ArrayHelper::getValueOfIndex(Model::VARIATION, $serviceVariationValues);
+            $questionType = ArrayHelper::getValueOfIndex(Model::QUESTION_TYPE,
                 $questionTypeAndCategoryAndSubcategoryValues);
-            $category = ArrayHelper::getValueOfIndex(StructureOfInputEnum::CATEGORY,
+            $category = ArrayHelper::getValueOfIndex(Model::CATEGORY,
                 $questionTypeAndCategoryAndSubcategoryValues);
-            $subcategory = ArrayHelper::getValueOfIndex(StructureOfInputEnum::SUBCATEGORY,
+            $subcategory = ArrayHelper::getValueOfIndex(Model::SUBCATEGORY,
                 $questionTypeAndCategoryAndSubcategoryValues);
 
             $data[] = (new WaitingTimeline())
@@ -64,13 +99,13 @@ if ($handle) {
         }
 
     }
-
-    foreach ($data as $item) {
-        echo '<pre>';
-        print_r($item);
-        echo '</pre>';
-    }
-
+    /*
+        foreach ($data as $item) {
+            echo '<pre>';
+            print_r($item);
+            echo '</pre>';
+        }
+    */
     fclose($handle);
 } else {
     echo 'Error open File';

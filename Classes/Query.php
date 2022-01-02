@@ -6,7 +6,8 @@ class Query extends Model
 {
     private $dateFrom = '';
     private $dateTo = '';
-
+    const DATE_FROM = 0;
+    const DATE_TO = 1;
     /**
      * @return string
      */

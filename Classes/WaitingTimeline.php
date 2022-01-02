@@ -11,7 +11,8 @@ class WaitingTimeline extends Model
 {
     private $date = '';
     private $time = 0;
-
+    const DATE = 4;
+    const TIME = 5;
 
     /**
      * @return string
