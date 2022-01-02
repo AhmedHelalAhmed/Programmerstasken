@@ -1,4 +1,10 @@
 <?php
 
+use Classes\WaitingTimeline;
 
-echo 'Hello world';
+require __DIR__ . '/vendor/autoload.php';
+
+
+$waitingTimeline = new WaitingTimeline();
+
+var_dump($waitingTimeline);

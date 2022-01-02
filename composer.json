@@ -1,0 +1,17 @@
+{
+  "name": "ahmedhelalahmed/programmerstasken",
+  "description": "Technical task",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Classes\\": "Classes"
+    }
+  },
+  "authors": [
+    {
+      "name": "Ahmed Helal",
+      "email": "ahmed.helal.online@gmail.com"
+    }
+  ],
+  "require": {}
+}

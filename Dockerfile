@@ -11,8 +11,9 @@ RUN apt-get update -yqq && \
   rm -rf /var/lib/apt/lists/*
 
 
-# Installation of NVM, NPM and packages
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+
 
 
 WORKDIR /var/www/html
