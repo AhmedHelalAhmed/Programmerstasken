@@ -6,5 +6,5 @@ use Classes\WaitingTimeline;
 
 interface Query
 {
-    public function canContinue(\Classes\Query $query, WaitingTimeline $waitingTimeline): bool;
+    public function canNotContinue(\Classes\Query $query, WaitingTimeline $waitingTimeline): bool;
 }

@@ -4,6 +4,15 @@ namespace Services;
 
 use Classes\Query;
 use Classes\WaitingTimeline;
+use Exception;
+use Queries\CategoryQuery;
+use Queries\DateFromQuery;
+use Queries\DateToQuery;
+use Queries\QuestionTypeQuery;
+use Queries\ResponseTypeQuery;
+use Queries\ServiceQuery;
+use Queries\SubCategoryQuery;
+use Queries\VariationQuery;
 
 /**
  * Class FilteringDataByQueryService
@@ -14,27 +23,27 @@ class FilteringDataByQueryService
 {
 
     const QUERY_PATTERNS = [
-        \Queries\ServiceQuery::class,
-        \Queries\QuestionTypeQuery::class,
-        \Queries\VariationQuery::class,
-        \Queries\CategoryQuery::class,
-        \Queries\SubCategoryQuery::class,
-        \Queries\ResponseTypeQuery::class,
-        \Queries\DateFromQuery::class,
-        \Queries\DateToQuery::class
+        ServiceQuery::class,
+        QuestionTypeQuery::class,
+        VariationQuery::class,
+        CategoryQuery::class,
+        SubCategoryQuery::class,
+        ResponseTypeQuery::class,
+        DateFromQuery::class,
+        DateToQuery::class
     ];
 
     /**
      * @param array $data
      * @param Query $query
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function execute(array $data, Query $query)
+    public function execute(array $data, Query $query): array
     {
         return array_filter($data, function (WaitingTimeline $waitingTimeline) use ($query) {
             foreach (self::QUERY_PATTERNS as $queryPattern) {
-                if ((new $queryPattern)->canContinue($query, $waitingTimeline)) {
+                if ((new $queryPattern)->canNotContinue($query, $waitingTimeline)) {
                     return false;
                 }
             }

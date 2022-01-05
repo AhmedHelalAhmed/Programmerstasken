@@ -4,7 +4,7 @@ use Classes\WaitingTimeline;
 
 class DateToQuery implements Query
 {
-    public function canContinue(\Classes\Query $query, WaitingTimeline $waitingTimeline): bool
+    public function canNotContinue(\Classes\Query $query, WaitingTimeline $waitingTimeline): bool
     {
         return $query->getDateTo() && $waitingTimeline->getDate() > $query->getDateTo();
     }
