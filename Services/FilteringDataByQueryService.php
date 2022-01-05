@@ -12,6 +12,18 @@ use Classes\WaitingTimeline;
  */
 class FilteringDataByQueryService
 {
+
+    const QUERY_PATTERNS = [
+        \Queries\ServiceQuery::class,
+        \Queries\QuestionTypeQuery::class,
+        \Queries\VariationQuery::class,
+        \Queries\CategoryQuery::class,
+        \Queries\SubCategoryQuery::class,
+        \Queries\ResponseTypeQuery::class,
+        \Queries\DateFromQuery::class,
+        \Queries\DateToQuery::class
+    ];
+
     /**
      * @param array $data
      * @param Query $query
@@ -21,41 +33,11 @@ class FilteringDataByQueryService
     public function execute(array $data, Query $query)
     {
         return array_filter($data, function (WaitingTimeline $waitingTimeline) use ($query) {
-
-            if ((new \Queries\ServiceQuery())->canContinue($query, $waitingTimeline)) {
-                return false;
+            foreach (self::QUERY_PATTERNS as $queryPattern) {
+                if ((new $queryPattern)->canContinue($query, $waitingTimeline)) {
+                    return false;
+                }
             }
-
-            if ((new \Queries\QuestionTypeQuery())->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-            if ((new \Queries\VariationQuery())->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-            if ((new \Queries\CategoryQuery)->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-            if ((new \Queries\SubCategoryQuery)->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-
-            if ((new \Queries\ResponseTypeQuery())->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-
-            if ((new \Queries\DateFromQuery)->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
-            if ((new \Queries\DateToQuery)->canContinue($query, $waitingTimeline)) {
-                return false;
-            }
-
             return true;
         });
     }
