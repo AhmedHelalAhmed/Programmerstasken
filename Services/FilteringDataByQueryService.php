@@ -22,45 +22,40 @@ class FilteringDataByQueryService
     {
         return array_filter($data, function (WaitingTimeline $waitingTimeline) use ($query) {
 
-            if ($query->getService() != '*' && $waitingTimeline->getService() != $query->getService()) {
+            if ((new \Queries\ServiceQuery())->canContinue($query, $waitingTimeline)) {
+                return false;
+            }
+
+            if ((new \Queries\QuestionTypeQuery())->canContinue($query, $waitingTimeline)) {
+                return false;
+            }
+
+            if ((new \Queries\VariationQuery())->canContinue($query, $waitingTimeline)) {
+                return false;
+            }
+
+            if ((new \Queries\CategoryQuery)->canContinue($query, $waitingTimeline)) {
+                return false;
+            }
+
+            if ((new \Queries\SubCategoryQuery)->canContinue($query, $waitingTimeline)) {
                 return false;
             }
 
 
-            if ($query->getQuestionType() != '*' && $waitingTimeline->getQuestionType() != $query->getQuestionType()) {
+            if ((new \Queries\ResponseTypeQuery())->canContinue($query, $waitingTimeline)) {
                 return false;
             }
 
 
-            if ($query->getService() != '*' && $query->getVariation() && $waitingTimeline->getVariation() != $query->getVariation()) {
+            if ((new \Queries\DateFromQuery)->canContinue($query, $waitingTimeline)) {
                 return false;
             }
 
-            if ($query->getQuestionType() != '*' && $query->getCategory() && $waitingTimeline->getCategory() != $query->getCategory()) {
+            if ((new \Queries\DateToQuery)->canContinue($query, $waitingTimeline)) {
                 return false;
             }
 
-            if ($query->getQuestionType() != '*' && $query->getSubCategory() && $waitingTimeline->getSubCategory() != $query->getSubCategory()) {
-                return false;
-            }
-
-
-            if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
-                return false;
-            }
-
-            if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
-                return false;
-            }
-
-
-            if ($query->getDateFrom() && $waitingTimeline->getDate() < $query->getDateFrom()) {
-                return false;
-            }
-
-            if ($query->getDateTo() && $waitingTimeline->getDate() > $query->getDateTo()) {
-                return false;
-            }
             return true;
         });
     }
