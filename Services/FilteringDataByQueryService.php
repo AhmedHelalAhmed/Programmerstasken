@@ -4,6 +4,15 @@ namespace Services;
 
 use Classes\Query;
 use Classes\WaitingTimeline;
+use Exception;
+use Queries\CategoryQuery;
+use Queries\DateFromQuery;
+use Queries\DateToQuery;
+use Queries\QuestionTypeQuery;
+use Queries\ResponseTypeQuery;
+use Queries\ServiceQuery;
+use Queries\SubCategoryQuery;
+use Queries\VariationQuery;
 
 /**
  * Class FilteringDataByQueryService
@@ -12,54 +21,31 @@ use Classes\WaitingTimeline;
  */
 class FilteringDataByQueryService
 {
+
+    const QUERY_PATTERNS = [
+        ServiceQuery::class,
+        QuestionTypeQuery::class,
+        VariationQuery::class,
+        CategoryQuery::class,
+        SubCategoryQuery::class,
+        ResponseTypeQuery::class,
+        DateFromQuery::class,
+        DateToQuery::class
+    ];
+
     /**
      * @param array $data
      * @param Query $query
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function execute(array $data, Query $query)
+    public function execute(array $data, Query $query): array
     {
         return array_filter($data, function (WaitingTimeline $waitingTimeline) use ($query) {
-
-            if ($query->getService() != '*' && $waitingTimeline->getService() != $query->getService()) {
-                return false;
-            }
-
-
-            if ($query->getQuestionType() != '*' && $waitingTimeline->getQuestionType() != $query->getQuestionType()) {
-                return false;
-            }
-
-
-            if ($query->getService() != '*' && $query->getVariation() && $waitingTimeline->getVariation() != $query->getVariation()) {
-                return false;
-            }
-
-            if ($query->getQuestionType() != '*' && $query->getCategory() && $waitingTimeline->getCategory() != $query->getCategory()) {
-                return false;
-            }
-
-            if ($query->getQuestionType() != '*' && $query->getSubCategory() && $waitingTimeline->getSubCategory() != $query->getSubCategory()) {
-                return false;
-            }
-
-
-            if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
-                return false;
-            }
-
-            if ($query->getResponseType() && $waitingTimeline->getResponseType() != $query->getResponseType()) {
-                return false;
-            }
-
-
-            if ($query->getDateFrom() && $waitingTimeline->getDate() < $query->getDateFrom()) {
-                return false;
-            }
-
-            if ($query->getDateTo() && $waitingTimeline->getDate() > $query->getDateTo()) {
-                return false;
+            foreach (self::QUERY_PATTERNS as $queryPattern) {
+                if ((new $queryPattern)->canNotContinue($query, $waitingTimeline)) {
+                    return false;
+                }
             }
             return true;
         });

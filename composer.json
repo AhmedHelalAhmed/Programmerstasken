@@ -7,8 +7,8 @@
       "Classes\\": "Classes",
       "Enums\\": "Enums",
       "Helpers\\": "Helpers",
-      "Services\\": "Services"
-
+      "Services\\": "Services",
+      "Queries\\": "Queries"
     }
   },
   "authors": [
